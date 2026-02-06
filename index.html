@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <h1>Weekly Meal Planner</h1>
+            <button id="exportBtn" class="export-btn">Export to CSV</button>
+        </div>
+        
+        <!-- Food Categories Section -->
+        <div class="food-categories">
+            <div class="category">
+                <h3>Meat</h3>
+                <div class="food-items">
+                    <div class="food-item" draggable="true" data-category="meat">Pork</div>
+                    <div class="food-item" draggable="true" data-category="meat">Beef</div>
+                    <div class="food-item" draggable="true" data-category="meat">Chicken</div>
+                    <div class="food-item" draggable="true" data-category="meat">Turkey</div>
+                    <div class="food-item" draggable="true" data-category="meat">Fish</div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h3>Veggies</h3>
+                <div class="food-items">
+                    <div class="food-item" draggable="true" data-category="veggie">Broccoli</div>
+                    <div class="food-item" draggable="true" data-category="veggie">Spinach</div>
+                    <div class="food-item" draggable="true" data-category="veggie">Carrots</div>
+                    <div class="food-item" draggable="true" data-category="veggie">Tomatoes</div>
+                    <div class="food-item" draggable="true" data-category="veggie">Lettuce</div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h3>Fruits</h3>
+                <div class="food-items">
+                    <div class="food-item" draggable="true" data-category="fruit">Apple</div>
+                    <div class="food-item" draggable="true" data-category="fruit">Orange</div>
+                    <div class="food-item" draggable="true" data-category="fruit">Banana</div>
+                    <div class="food-item" draggable="true" data-category="fruit">Grapes</div>
+                    <div class="food-item" draggable="true" data-category="fruit">Berries</div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h3>Other</h3>
+                <div class="custom-food">
+                    <input type="text" id="customFood" placeholder="Enter custom food">
+                    <button id="addCustomFood">Add</button>
+                </div>
+                <div class="food-items" id="customFoodItems"></div>
+            </div>
+        </div>
+
+        <!-- Weekly Calendar Section -->
+        <div class="weekly-calendar">
+            <div class="day-card" data-day="monday">
+                <h3>Monday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="tuesday">
+                <h3>Tuesday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="wednesday">
+                <h3>Wednesday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="thursday">
+                <h3>Thursday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="friday">
+                <h3>Friday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="saturday">
+                <h3>Saturday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+
+            <div class="day-card" data-day="sunday">
+                <h3>Sunday</h3>
+                <div class="meal-section" data-meal="breakfast">
+                    <h4>Breakfast</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="lunch">
+                    <h4>Lunch</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="dinner">
+                    <h4>Dinner</h4>
+                    <div class="drop-zone"></div>
+                </div>
+                <div class="meal-section" data-meal="snacks">
+                    <h4>Snacks</h4>
+                    <div class="drop-zone"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
