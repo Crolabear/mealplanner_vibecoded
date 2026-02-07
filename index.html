@@ -14,48 +14,122 @@
         </div>
         
         <!-- Food Categories Section -->
-        <div class="food-categories">
-            <div class="category">
-                <h3>Meat</h3>
+        <div class="food-categories" id="foodCategories">
+            <div class="category" data-category="meat">
+                <div class="category-header">
+                    <h3>Meat</h3>
+                    <button class="delete-category-btn" title="Delete Category">×</button>
+                </div>
+                <div class="add-food-section">
+                    <input type="text" class="add-food-input" placeholder="Add food item">
+                    <button class="add-food-btn">+</button>
+                </div>
                 <div class="food-items">
-                    <div class="food-item" draggable="true" data-category="meat">Pork</div>
-                    <div class="food-item" draggable="true" data-category="meat">Beef</div>
-                    <div class="food-item" draggable="true" data-category="meat">Chicken</div>
-                    <div class="food-item" draggable="true" data-category="meat">Turkey</div>
-                    <div class="food-item" draggable="true" data-category="meat">Fish</div>
+                    <div class="food-item" draggable="true" data-category="meat">
+                        <span>Pork</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="meat">
+                        <span>Beef</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="meat">
+                        <span>Chicken</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="meat">
+                        <span>Turkey</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="meat">
+                        <span>Fish</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="category">
-                <h3>Veggies</h3>
+            <div class="category" data-category="veggie">
+                <div class="category-header">
+                    <h3>Veggies</h3>
+                    <button class="delete-category-btn" title="Delete Category">×</button>
+                </div>
+                <div class="add-food-section">
+                    <input type="text" class="add-food-input" placeholder="Add food item">
+                    <button class="add-food-btn">+</button>
+                </div>
                 <div class="food-items">
-                    <div class="food-item" draggable="true" data-category="veggie">Broccoli</div>
-                    <div class="food-item" draggable="true" data-category="veggie">Spinach</div>
-                    <div class="food-item" draggable="true" data-category="veggie">Carrots</div>
-                    <div class="food-item" draggable="true" data-category="veggie">Tomatoes</div>
-                    <div class="food-item" draggable="true" data-category="veggie">Lettuce</div>
+                    <div class="food-item" draggable="true" data-category="veggie">
+                        <span>Broccoli</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="veggie">
+                        <span>Spinach</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="veggie">
+                        <span>Carrots</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="veggie">
+                        <span>Tomatoes</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="veggie">
+                        <span>Lettuce</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="category">
-                <h3>Fruits</h3>
+            <div class="category" data-category="fruit">
+                <div class="category-header">
+                    <h3>Fruits</h3>
+                    <button class="delete-category-btn" title="Delete Category">×</button>
+                </div>
+                <div class="add-food-section">
+                    <input type="text" class="add-food-input" placeholder="Add food item">
+                    <button class="add-food-btn">+</button>
+                </div>
                 <div class="food-items">
-                    <div class="food-item" draggable="true" data-category="fruit">Apple</div>
-                    <div class="food-item" draggable="true" data-category="fruit">Orange</div>
-                    <div class="food-item" draggable="true" data-category="fruit">Banana</div>
-                    <div class="food-item" draggable="true" data-category="fruit">Grapes</div>
-                    <div class="food-item" draggable="true" data-category="fruit">Berries</div>
+                    <div class="food-item" draggable="true" data-category="fruit">
+                        <span>Apple</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="fruit">
+                        <span>Orange</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="fruit">
+                        <span>Banana</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="fruit">
+                        <span>Grapes</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
+                    <div class="food-item" draggable="true" data-category="fruit">
+                        <span>Berries</span>
+                        <button class="remove-food-btn">×</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="category">
-                <h3>Other</h3>
-                <div class="custom-food">
-                    <input type="text" id="customFood" placeholder="Enter custom food">
-                    <button id="addCustomFood">Add</button>
+            <div class="category" data-category="other">
+                <div class="category-header">
+                    <h3>Other</h3>
+                    <button class="delete-category-btn" title="Delete Category">×</button>
                 </div>
-                <div class="food-items" id="customFoodItems"></div>
+                <div class="add-food-section">
+                    <input type="text" class="add-food-input" placeholder="Add food item">
+                    <button class="add-food-btn">+</button>
+                </div>
+                <div class="food-items"></div>
             </div>
+        </div>
+        
+        <div class="add-category-section">
+            <input type="text" id="newCategoryName" placeholder="New category name">
+            <button id="addCategoryBtn">Add Category</button>
         </div>
 
         <!-- Weekly Calendar Section -->

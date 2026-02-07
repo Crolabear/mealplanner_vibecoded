@@ -5,7 +5,7 @@ let mealPlan = {};
 document.addEventListener('DOMContentLoaded', () => {
     loadMealPlan();
     setupDragAndDrop();
-    setupCustomFood();
+    setupCategoryManagement();
     highlightToday();
     setupDayCardClicks();
     checkFruitVeggieStatus();
@@ -40,14 +40,21 @@ function setupDragAndDrop() {
 }
 
 function handleDragStart(e) {
-    e.target.classList.add('dragging');
+    const foodItem = e.target.closest('.food-item');
+    if (!foodItem) return;
+    
+    foodItem.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'copy';
-    e.dataTransfer.setData('text/plain', e.target.textContent);
-    e.dataTransfer.setData('category', e.target.dataset.category);
+    const foodName = foodItem.querySelector('span').textContent;
+    e.dataTransfer.setData('text/plain', foodName);
+    e.dataTransfer.setData('category', foodItem.dataset.category);
 }
 
 function handleDragEnd(e) {
-    e.target.classList.remove('dragging');
+    const foodItem = e.target.closest('.food-item');
+    if (foodItem) {
+        foodItem.classList.remove('dragging');
+    }
 }
 
 function handleDragOver(e) {
@@ -96,15 +103,120 @@ function addFoodToMeal(day, meal, foodName, category, dropZone) {
     dropZone.appendChild(foodElement);
 }
 
-// Custom food functionality
-function setupCustomFood() {
-    const addBtn = document.getElementById('addCustomFood');
-    const input = document.getElementById('customFood');
+// Category management functionality
+function setupCategoryManagement() {
+    // Setup add food buttons for each category
+    document.querySelectorAll('.add-food-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const category = e.target.closest('.category');
+            const input = category.querySelector('.add-food-input');
+            const foodName = input.value.trim();
+            
+            if (foodName) {
+                const categoryType = category.dataset.category;
+                addFoodItemToCategory(categoryType, foodName, category);
+                input.value = '';
+            }
+        });
+    });
+    
+    // Setup enter key for add food inputs
+    document.querySelectorAll('.add-food-input').forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.target.nextElementSibling.click();
+            }
+        });
+    });
+    
+    // Setup remove food buttons
+    document.querySelectorAll('.remove-food-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.target.closest('.food-item').remove();
+        });
+    });
+    
+    // Setup delete category buttons
+    document.querySelectorAll('.delete-category-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            if (confirm('Delete this category and all its items?')) {
+                e.target.closest('.category').remove();
+            }
+        });
+    });
+    
+    // Setup add new category
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const categoryInput = document.getElementById('newCategoryName');
+    
+    addCategoryBtn.addEventListener('click', () => {
+        const categoryName = categoryInput.value.trim();
+        if (categoryName) {
+            addNewCategory(categoryName);
+            categoryInput.value = '';
+        }
+    });
+    
+    categoryInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addCategoryBtn.click();
+        }
+    });
+}
+
+function addFoodItemToCategory(categoryType, foodName, categoryElement) {
+    const container = categoryElement.querySelector('.food-items');
+    const foodItem = document.createElement('div');
+    foodItem.className = 'food-item';
+    foodItem.draggable = true;
+    foodItem.dataset.category = categoryType;
+    foodItem.innerHTML = `
+        <span>${foodName}</span>
+        <button class="remove-food-btn">×</button>
+    `;
+    
+    foodItem.addEventListener('dragstart', handleDragStart);
+    foodItem.addEventListener('dragend', handleDragEnd);
+    
+    foodItem.querySelector('.remove-food-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        foodItem.remove();
+    });
+    
+    container.appendChild(foodItem);
+}
+
+function addNewCategory(categoryName) {
+    const categoriesContainer = document.getElementById('foodCategories');
+    const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
+    
+    const categoryElement = document.createElement('div');
+    categoryElement.className = 'category';
+    categoryElement.dataset.category = categoryId;
+    categoryElement.innerHTML = `
+        <div class="category-header">
+            <h3>${categoryName}</h3>
+            <button class="delete-category-btn" title="Delete Category">×</button>
+        </div>
+        <div class="add-food-section">
+            <input type="text" class="add-food-input" placeholder="Add food item">
+            <button class="add-food-btn">+</button>
+        </div>
+        <div class="food-items"></div>
+    `;
+    
+    categoriesContainer.appendChild(categoryElement);
+    
+    // Setup event listeners for new category
+    const addBtn = categoryElement.querySelector('.add-food-btn');
+    const input = categoryElement.querySelector('.add-food-input');
+    const deleteBtn = categoryElement.querySelector('.delete-category-btn');
     
     addBtn.addEventListener('click', () => {
         const foodName = input.value.trim();
         if (foodName) {
-            addCustomFoodItem(foodName);
+            addFoodItemToCategory(categoryId, foodName, categoryElement);
             input.value = '';
         }
     });
@@ -114,20 +226,12 @@ function setupCustomFood() {
             addBtn.click();
         }
     });
-}
-
-function addCustomFoodItem(foodName) {
-    const container = document.getElementById('customFoodItems');
-    const foodItem = document.createElement('div');
-    foodItem.className = 'food-item';
-    foodItem.draggable = true;
-    foodItem.dataset.category = 'other';
-    foodItem.textContent = foodName;
     
-    foodItem.addEventListener('dragstart', handleDragStart);
-    foodItem.addEventListener('dragend', handleDragEnd);
-    
-    container.appendChild(foodItem);
+    deleteBtn.addEventListener('click', () => {
+        if (confirm('Delete this category and all its items?')) {
+            categoryElement.remove();
+        }
+    });
 }
 
 // Check if each day has fruit/veggie

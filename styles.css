@@ -55,10 +55,63 @@ h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .category h3 {
     color: #555;
-    margin-bottom: 10px;
     font-size: 18px;
+    margin: 0;
+}
+
+.delete-category-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+}
+
+.delete-category-btn:hover {
+    background: #d32f2f;
+}
+
+.add-food-section {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.add-food-input {
+    flex: 1;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.add-food-btn {
+    padding: 6px 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.add-food-btn:hover {
+    background: #45a049;
 }
 
 .food-items {
@@ -74,6 +127,32 @@ h1 {
     cursor: move;
     text-align: center;
     transition: transform 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.food-item span {
+    flex: 1;
+}
+
+.remove-food-btn {
+    background: rgba(0, 0, 0, 0.2);
+    color: #333;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.remove-food-btn:hover {
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .food-item[data-category="meat"] {
@@ -101,29 +180,37 @@ h1 {
     opacity: 0.5;
 }
 
-.custom-food {
+.add-category-section {
     display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#customFood {
+#newCategoryName {
     flex: 1;
-    padding: 8px;
+    max-width: 300px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 14px;
 }
 
-#addCustomFood {
-    padding: 8px 15px;
+#addCategoryBtn {
+    padding: 10px 20px;
     background: #2196F3;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 14px;
 }
 
-#addCustomFood:hover {
+#addCategoryBtn:hover {
     background: #1976D2;
 }
 
