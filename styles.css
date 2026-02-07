@@ -171,6 +171,11 @@ h1 {
     background: rgba(150, 120, 180, 0.7);
 }
 
+/* Custom category colors using CSS variable */
+.category[style*="--category-color"] .food-item {
+    background: var(--category-color);
+}
+
 .food-item:hover {
     transform: scale(1.05);
     filter: brightness(1.1);
@@ -313,6 +318,11 @@ h1 {
 
 .dropped-food[data-category="other"] {
     background: rgba(150, 120, 180, 0.7);
+}
+
+/* Custom category colors for dropped foods */
+.dropped-food:not([data-category="meat"]):not([data-category="veggie"]):not([data-category="fruit"]):not([data-category="other"]) {
+    background: var(--custom-category-color, rgba(150, 120, 180, 0.7));
 }
 
 .dropped-food .remove-btn {

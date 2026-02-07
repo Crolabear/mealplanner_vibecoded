@@ -88,6 +88,15 @@ function addFoodToMeal(day, meal, foodName, category, dropZone) {
     const foodElement = document.createElement('div');
     foodElement.className = 'dropped-food';
     foodElement.dataset.category = category;
+    
+    // Get custom category color if it exists
+    const categoryElement = document.querySelector(`.category[data-category="${category}"]`);
+    if (categoryElement && categoryElement.style.getPropertyValue('--category-color')) {
+        const color = categoryElement.style.getPropertyValue('--category-color');
+        foodElement.style.setProperty('--custom-category-color', color);
+        foodElement.style.background = color;
+    }
+    
     foodElement.innerHTML = `
         <span>${foodName}</span>
         <button class="remove-btn">×</button>
@@ -191,9 +200,13 @@ function addNewCategory(categoryName) {
     const categoriesContainer = document.getElementById('foodCategories');
     const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
     
+    // Generate a unique color for this category
+    const color = generateCategoryColor(categoryId);
+    
     const categoryElement = document.createElement('div');
     categoryElement.className = 'category';
     categoryElement.dataset.category = categoryId;
+    categoryElement.style.setProperty('--category-color', color);
     categoryElement.innerHTML = `
         <div class="category-header">
             <h3>${categoryName}</h3>
@@ -232,6 +245,22 @@ function addNewCategory(categoryName) {
             categoryElement.remove();
         }
     });
+}
+
+// Generate a unique color based on category name
+function generateCategoryColor(categoryId) {
+    // Hash the category ID to get a consistent color
+    let hash = 0;
+    for (let i = 0; i < categoryId.length; i++) {
+        hash = categoryId.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Generate HSL color with good saturation and lightness
+    const hue = Math.abs(hash % 360);
+    const saturation = 45 + (Math.abs(hash) % 20); // 45-65%
+    const lightness = 55 + (Math.abs(hash >> 8) % 15); // 55-70%
+    
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
 // Check if each day has fruit/veggie
