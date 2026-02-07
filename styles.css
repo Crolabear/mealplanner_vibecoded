@@ -10,6 +10,12 @@ body {
     padding: 20px;
 }
 
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -21,11 +27,30 @@ h1 {
     margin-bottom: 30px;
 }
 
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+}
+
 .header-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+    .header-section {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .header-section h1 {
+        margin-bottom: 0;
+    }
 }
 
 .export-btn {
@@ -53,6 +78,15 @@ h1 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .food-categories {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
 }
 
 .category-header {
@@ -131,6 +165,15 @@ h1 {
     justify-content: space-between;
     align-items: center;
     gap: 5px;
+    touch-action: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .food-item {
+        padding: 12px;
+        font-size: 16px;
+    }
 }
 
 .food-item span {
@@ -196,6 +239,14 @@ h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+@media (max-width: 768px) {
+    .add-category-section {
+        flex-direction: column;
+        padding: 12px;
+        margin-bottom: 20px;
+    }
+}
+
 #newCategoryName {
     flex: 1;
     max-width: 300px;
@@ -203,6 +254,12 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    #newCategoryName {
+        max-width: 100%;
+    }
 }
 
 #addCategoryBtn {
@@ -224,6 +281,13 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .weekly-calendar {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 .day-card {
@@ -287,6 +351,14 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    touch-action: none;
+}
+
+@media (max-width: 768px) {
+    .drop-zone {
+        min-height: 60px;
+        padding: 8px;
+    }
 }
 
 .drop-zone.drag-over {

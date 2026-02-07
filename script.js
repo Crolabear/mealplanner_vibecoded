@@ -413,3 +413,83 @@ function exportToCSV() {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 }
+
+// Mobile touch support for drag and drop
+let touchedElement = null;
+let touchStartX = 0;
+let touchStartY = 0;
+
+function setupTouchSupport() {
+    document.addEventListener('touchstart', handleTouchStart, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+function handleTouchStart(e) {
+    const foodItem = e.target.closest('.food-item');
+    if (!foodItem || e.target.classList.contains('remove-food-btn')) return;
+    
+    touchedElement = foodItem;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    
+    foodItem.classList.add('dragging');
+    e.preventDefault();
+}
+
+function handleTouchMove(e) {
+    if (!touchedElement) return;
+    
+    const touch = e.touches[0];
+    const currentX = touch.clientX;
+    const currentY = touch.clientY;
+    
+    // Check if we're over a drop zone
+    const dropZone = document.elementFromPoint(currentX, currentY)?.closest('.drop-zone');
+    
+    // Remove drag-over from all drop zones
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.classList.remove('drag-over');
+    });
+    
+    // Add drag-over to current drop zone
+    if (dropZone) {
+        dropZone.classList.add('drag-over');
+    }
+    
+    e.preventDefault();
+}
+
+function handleTouchEnd(e) {
+    if (!touchedElement) return;
+    
+    const touch = e.changedTouches[0];
+    const dropZone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
+    
+    if (dropZone) {
+        const foodName = touchedElement.querySelector('span').textContent;
+        const category = touchedElement.dataset.category;
+        const mealSection = dropZone.closest('.meal-section');
+        const dayCard = dropZone.closest('.day-card');
+        
+        if (dayCard && mealSection) {
+            const day = dayCard.dataset.day;
+            const meal = mealSection.dataset.meal;
+            addFoodToMeal(day, meal, foodName, category, dropZone);
+            saveMealPlan();
+            checkFruitVeggieStatus();
+        }
+    }
+    
+    touchedElement.classList.remove('dragging');
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.classList.remove('drag-over');
+    });
+    
+    touchedElement = null;
+    e.preventDefault();
+}
+
+// Initialize touch support
+setupTouchSupport();
