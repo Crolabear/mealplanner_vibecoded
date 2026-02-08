@@ -154,95 +154,6 @@ h1 {
     gap: 8px;
 }
 
-.food-item-wrapper {
-    display: flex;
-    flex-direction: column;
-}
-
-.expand-btn {
-    background: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 1;
-    padding: 0;
-    flex-shrink: 0;
-}
-
-.expand-btn:hover {
-    background: #1976D2;
-}
-
-.food-item-expand {
-    margin-top: 8px;
-    margin-left: 28px;
-}
-
-.expand-content {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 12px;
-}
-
-.expand-section {
-    margin-bottom: 12px;
-}
-
-.expand-section:last-of-type {
-    margin-bottom: 10px;
-}
-
-.expand-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #666;
-    margin-bottom: 6px;
-}
-
-.expand-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.expand-checkboxes label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    color: #333;
-    cursor: pointer;
-    user-select: none;
-}
-
-.expand-checkboxes input[type="checkbox"] {
-    cursor: pointer;
-    width: 14px;
-    height: 14px;
-}
-
-.expand-add-btn {
-    width: 100%;
-    padding: 8px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.expand-add-btn:hover {
-    background: #45a049;
-}
-
 .food-item {
     color: #333;
     padding: 10px;
@@ -253,7 +164,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     touch-action: none;
     user-select: none;
 }
