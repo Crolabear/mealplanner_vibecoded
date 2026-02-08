@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkFruitVeggieStatus();
     setupExport();
     setupClearAll();
-    setupFoodItemClick();
+    setupExpandButtons();
 });
 
 // Highlight today's day
@@ -237,24 +237,61 @@ function setupCategoryManagement() {
 
 function addFoodItemToCategory(categoryType, foodName, categoryElement) {
     const container = categoryElement.querySelector('.food-items');
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'food-item-wrapper';
+    
     const foodItem = document.createElement('div');
     foodItem.className = 'food-item';
     foodItem.draggable = true;
     foodItem.dataset.category = categoryType;
     foodItem.innerHTML = `
+        <button class="expand-btn">+</button>
         <span>${foodName}</span>
         <button class="remove-food-btn">×</button>
     `;
+    
+    const expandArea = document.createElement('div');
+    expandArea.className = 'food-item-expand';
+    expandArea.style.display = 'none';
     
     foodItem.addEventListener('dragstart', handleDragStart);
     foodItem.addEventListener('dragend', handleDragEnd);
     
     foodItem.querySelector('.remove-food-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        foodItem.remove();
+        wrapper.remove();
     });
     
-    container.appendChild(foodItem);
+    // Setup expand button
+    const expandBtn = foodItem.querySelector('.expand-btn');
+    expandBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        if (expandArea.style.display === 'none') {
+            // Close all other expanded items
+            document.querySelectorAll('.food-item-expand').forEach(area => {
+                area.style.display = 'none';
+                area.innerHTML = '';
+            });
+            document.querySelectorAll('.expand-btn').forEach(b => b.textContent = '+');
+            
+            // Open this one
+            expandBtn.textContent = '−';
+            expandArea.style.display = 'block';
+            expandArea.innerHTML = createExpandContent(foodName, categoryType);
+            setupExpandAreaListeners(expandArea, foodName, categoryType);
+        } else {
+            // Close this one
+            expandBtn.textContent = '+';
+            expandArea.style.display = 'none';
+            expandArea.innerHTML = '';
+        }
+    });
+    
+    wrapper.appendChild(foodItem);
+    wrapper.appendChild(expandArea);
+    container.appendChild(wrapper);
 }
 
 function addNewCategory(categoryName) {
@@ -409,127 +446,82 @@ function setupClearAll() {
     }
 }
 
-// Setup click handler for food items in categories
-function setupFoodItemClick() {
-    document.addEventListener('click', (e) => {
-        const foodItem = e.target.closest('.food-item');
-        const isInCategory = foodItem && foodItem.closest('.category');
-        
-        // Only trigger for food items in categories, not dropped foods
-        // And not when clicking remove button or if item was just dragged
-        if (isInCategory && 
-            !e.target.classList.contains('remove-food-btn') && 
-            !e.target.classList.contains('add-food-btn') &&
-            !foodItem.classList.contains('was-dragged')) {
-            showQuickAddMenu(foodItem);
-        }
-        
-        // Clear drag flag
-        if (foodItem && foodItem.classList.contains('was-dragged')) {
-            setTimeout(() => foodItem.classList.remove('was-dragged'), 100);
-        }
+// Setup expand buttons for food items
+function setupExpandButtons() {
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const wrapper = btn.closest('.food-item-wrapper');
+            const expandArea = wrapper.querySelector('.food-item-expand');
+            const foodItem = wrapper.querySelector('.food-item');
+            const foodName = foodItem.querySelector('span').textContent;
+            const category = foodItem.dataset.category;
+            
+            // Toggle expand
+            if (expandArea.style.display === 'none') {
+                // Close all other expanded items
+                document.querySelectorAll('.food-item-expand').forEach(area => {
+                    area.style.display = 'none';
+                    area.innerHTML = '';
+                });
+                document.querySelectorAll('.expand-btn').forEach(b => b.textContent = '+');
+                
+                // Open this one
+                btn.textContent = '−';
+                expandArea.style.display = 'block';
+                expandArea.innerHTML = createExpandContent(foodName, category);
+                setupExpandAreaListeners(expandArea, foodName, category);
+            } else {
+                // Close this one
+                btn.textContent = '+';
+                expandArea.style.display = 'none';
+                expandArea.innerHTML = '';
+            }
+        });
     });
 }
 
-function showQuickAddMenu(foodItem) {
-    const foodName = foodItem.querySelector('span').textContent;
-    const category = foodItem.dataset.category;
-    
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.className = 'quick-add-overlay';
-    
-    // Create menu
-    const menu = document.createElement('div');
-    menu.className = 'quick-add-menu';
-    menu.innerHTML = `
-        <button class="menu-close-btn">×</button>
-        <h4>Add "${foodName}" to:</h4>
-        
-        <div class="menu-section">
-            <label>Select Days:</label>
-            <div class="checkbox-grid">
-                <label class="checkbox-item">
-                    <input type="checkbox" value="monday" class="day-checkbox">
-                    <span>Monday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="tuesday" class="day-checkbox">
-                    <span>Tuesday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="wednesday" class="day-checkbox">
-                    <span>Wednesday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="thursday" class="day-checkbox">
-                    <span>Thursday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="friday" class="day-checkbox">
-                    <span>Friday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="saturday" class="day-checkbox">
-                    <span>Saturday</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="sunday" class="day-checkbox">
-                    <span>Sunday</span>
-                </label>
+function createExpandContent(foodName, category) {
+    return `
+        <div class="expand-content">
+            <div class="expand-section">
+                <div class="expand-label">Days:</div>
+                <div class="expand-checkboxes">
+                    <label><input type="checkbox" value="monday"> Mon</label>
+                    <label><input type="checkbox" value="tuesday"> Tue</label>
+                    <label><input type="checkbox" value="wednesday"> Wed</label>
+                    <label><input type="checkbox" value="thursday"> Thu</label>
+                    <label><input type="checkbox" value="friday"> Fri</label>
+                    <label><input type="checkbox" value="saturday"> Sat</label>
+                    <label><input type="checkbox" value="sunday"> Sun</label>
+                </div>
             </div>
-        </div>
-        
-        <div class="menu-section">
-            <label>Select Meals:</label>
-            <div class="checkbox-grid">
-                <label class="checkbox-item">
-                    <input type="checkbox" value="breakfast" class="meal-checkbox">
-                    <span>Breakfast</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="lunch" class="meal-checkbox">
-                    <span>Lunch</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="dinner" class="meal-checkbox">
-                    <span>Dinner</span>
-                </label>
-                <label class="checkbox-item">
-                    <input type="checkbox" value="snacks" class="meal-checkbox" checked>
-                    <span>Snacks</span>
-                </label>
+            <div class="expand-section">
+                <div class="expand-label">Meals:</div>
+                <div class="expand-checkboxes">
+                    <label><input type="checkbox" value="breakfast"> Breakfast</label>
+                    <label><input type="checkbox" value="lunch"> Lunch</label>
+                    <label><input type="checkbox" value="dinner"> Dinner</label>
+                    <label><input type="checkbox" value="snacks" checked> Snacks</label>
+                </div>
             </div>
+            <button class="expand-add-btn">Add to Selected</button>
         </div>
-        
-        <button class="menu-add-btn">Add to Selected</button>
     `;
+}
+
+function setupExpandAreaListeners(expandArea, foodName, category) {
+    const addBtn = expandArea.querySelector('.expand-add-btn');
     
-    document.body.appendChild(overlay);
-    document.body.appendChild(menu);
-    
-    // Position menu in center
-    setTimeout(() => {
-        const rect = menu.getBoundingClientRect();
-        menu.style.left = `${Math.max(20, (window.innerWidth - rect.width) / 2)}px`;
-        menu.style.top = `${Math.max(20, (window.innerHeight - rect.height) / 2)}px`;
-    }, 0);
-    
-    // Close menu function
-    const closeMenu = () => {
-        overlay.remove();
-        menu.remove();
-    };
-    
-    // Setup close button
-    menu.querySelector('.menu-close-btn').addEventListener('click', closeMenu);
-    overlay.addEventListener('click', closeMenu);
-    
-    // Setup add button
-    menu.querySelector('.menu-add-btn').addEventListener('click', () => {
-        const selectedDays = Array.from(menu.querySelectorAll('.day-checkbox:checked'))
+    addBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        
+        const selectedDays = Array.from(expandArea.querySelectorAll('.expand-checkboxes input[value]:checked'))
+            .filter(cb => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].includes(cb.value))
             .map(cb => cb.value);
-        const selectedMeals = Array.from(menu.querySelectorAll('.meal-checkbox:checked'))
+            
+        const selectedMeals = Array.from(expandArea.querySelectorAll('.expand-checkboxes input[value]:checked'))
+            .filter(cb => ['breakfast', 'lunch', 'dinner', 'snacks'].includes(cb.value))
             .map(cb => cb.value);
         
         if (selectedDays.length === 0) {
@@ -556,7 +548,10 @@ function showQuickAddMenu(foodItem) {
         saveMealPlan();
         checkFruitVeggieStatus();
         
-        closeMenu();
+        // Close the expand area
+        expandArea.style.display = 'none';
+        expandArea.innerHTML = '';
+        expandArea.closest('.food-item-wrapper').querySelector('.expand-btn').textContent = '+';
     });
 }
 
