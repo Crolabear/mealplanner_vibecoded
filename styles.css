@@ -509,3 +509,131 @@ h1 {
         width: 100%;
     }
 }
+
+/* Quick Add Menu Styles */
+.quick-add-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.quick-add-menu {
+    position: fixed;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    z-index: 1000;
+    max-width: 450px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.quick-add-menu h4 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 18px;
+    padding-right: 30px;
+}
+
+.menu-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+}
+
+.menu-close-btn:hover {
+    background: #d32f2f;
+}
+
+.menu-section {
+    margin-bottom: 20px;
+}
+
+.menu-section label {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+    background: #e8e8e8;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.checkbox-item span {
+    font-size: 14px;
+    color: #333;
+    user-select: none;
+}
+
+.checkbox-item input[type="checkbox"]:checked + span {
+    font-weight: 600;
+    color: #4CAF50;
+}
+
+.menu-add-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.menu-add-btn:hover {
+    background: #45a049;
+}
+
+@media (max-width: 768px) {
+    .quick-add-menu {
+        max-width: 90%;
+    }
+    
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+}

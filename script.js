@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkFruitVeggieStatus();
     setupExport();
     setupClearAll();
+    setupFoodItemClick();
 });
 
 // Highlight today's day
@@ -45,6 +46,7 @@ function handleDragStart(e) {
     if (!foodItem) return;
     
     foodItem.classList.add('dragging');
+    foodItem.classList.add('was-dragged');
     e.dataTransfer.effectAllowed = 'copy';
     const foodName = foodItem.querySelector('span').textContent;
     e.dataTransfer.setData('text/plain', foodName);
@@ -405,6 +407,157 @@ function setupClearAll() {
             }
         });
     }
+}
+
+// Setup click handler for food items in categories
+function setupFoodItemClick() {
+    document.addEventListener('click', (e) => {
+        const foodItem = e.target.closest('.food-item');
+        const isInCategory = foodItem && foodItem.closest('.category');
+        
+        // Only trigger for food items in categories, not dropped foods
+        // And not when clicking remove button or if item was just dragged
+        if (isInCategory && 
+            !e.target.classList.contains('remove-food-btn') && 
+            !e.target.classList.contains('add-food-btn') &&
+            !foodItem.classList.contains('was-dragged')) {
+            showQuickAddMenu(foodItem);
+        }
+        
+        // Clear drag flag
+        if (foodItem && foodItem.classList.contains('was-dragged')) {
+            setTimeout(() => foodItem.classList.remove('was-dragged'), 100);
+        }
+    });
+}
+
+function showQuickAddMenu(foodItem) {
+    const foodName = foodItem.querySelector('span').textContent;
+    const category = foodItem.dataset.category;
+    
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'quick-add-overlay';
+    
+    // Create menu
+    const menu = document.createElement('div');
+    menu.className = 'quick-add-menu';
+    menu.innerHTML = `
+        <button class="menu-close-btn">×</button>
+        <h4>Add "${foodName}" to:</h4>
+        
+        <div class="menu-section">
+            <label>Select Days:</label>
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" value="monday" class="day-checkbox">
+                    <span>Monday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="tuesday" class="day-checkbox">
+                    <span>Tuesday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="wednesday" class="day-checkbox">
+                    <span>Wednesday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="thursday" class="day-checkbox">
+                    <span>Thursday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="friday" class="day-checkbox">
+                    <span>Friday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="saturday" class="day-checkbox">
+                    <span>Saturday</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="sunday" class="day-checkbox">
+                    <span>Sunday</span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <label>Select Meals:</label>
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" value="breakfast" class="meal-checkbox">
+                    <span>Breakfast</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="lunch" class="meal-checkbox">
+                    <span>Lunch</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="dinner" class="meal-checkbox">
+                    <span>Dinner</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="snacks" class="meal-checkbox" checked>
+                    <span>Snacks</span>
+                </label>
+            </div>
+        </div>
+        
+        <button class="menu-add-btn">Add to Selected</button>
+    `;
+    
+    document.body.appendChild(overlay);
+    document.body.appendChild(menu);
+    
+    // Position menu in center
+    setTimeout(() => {
+        const rect = menu.getBoundingClientRect();
+        menu.style.left = `${Math.max(20, (window.innerWidth - rect.width) / 2)}px`;
+        menu.style.top = `${Math.max(20, (window.innerHeight - rect.height) / 2)}px`;
+    }, 0);
+    
+    // Close menu function
+    const closeMenu = () => {
+        overlay.remove();
+        menu.remove();
+    };
+    
+    // Setup close button
+    menu.querySelector('.menu-close-btn').addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+    
+    // Setup add button
+    menu.querySelector('.menu-add-btn').addEventListener('click', () => {
+        const selectedDays = Array.from(menu.querySelectorAll('.day-checkbox:checked'))
+            .map(cb => cb.value);
+        const selectedMeals = Array.from(menu.querySelectorAll('.meal-checkbox:checked'))
+            .map(cb => cb.value);
+        
+        if (selectedDays.length === 0) {
+            alert('Please select at least one day');
+            return;
+        }
+        
+        if (selectedMeals.length === 0) {
+            alert('Please select at least one meal');
+            return;
+        }
+        
+        // Add food to all selected combinations
+        selectedDays.forEach(day => {
+            selectedMeals.forEach(meal => {
+                const dayCard = document.querySelector(`[data-day="${day}"]`);
+                const mealSection = dayCard.querySelector(`[data-meal="${meal}"]`);
+                const dropZone = mealSection.querySelector('.drop-zone');
+                
+                addFoodToMeal(day, meal, foodName, category, dropZone);
+            });
+        });
+        
+        saveMealPlan();
+        checkFruitVeggieStatus();
+        
+        closeMenu();
+    });
 }
 
 // Save meal plan to localStorage
