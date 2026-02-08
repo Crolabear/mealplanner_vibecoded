@@ -374,6 +374,16 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: move;
+    user-select: none;
+}
+
+.dropped-food.dragging {
+    opacity: 0.5;
+}
+
+.dropped-food span {
+    pointer-events: none;
 }
 
 .dropped-food[data-category="meat"] {
@@ -409,4 +419,93 @@ h1 {
 
 .dropped-food .remove-btn:hover {
     background: rgba(255,255,255,0.5);
+}
+
+/* Day card header styles */
+.day-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.day-card-header h3 {
+    margin: 0;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+.day-card-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.bring-to-top-btn {
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.bring-to-top-btn:hover {
+    background: #1976D2;
+}
+
+.view-detail-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    flex: 1;
+}
+
+.view-detail-btn:hover {
+    background: #45a049;
+}
+
+/* Header buttons */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.clear-all-btn {
+    padding: 12px 24px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.clear-all-btn:hover {
+    background: #d32f2f;
+}
+
+@media (max-width: 768px) {
+    .header-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .day-card-header {
+        gap: 10px;
+    }
+    
+    .day-card-actions {
+        width: 100%;
+    }
 }

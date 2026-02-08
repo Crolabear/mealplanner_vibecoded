@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDragAndDrop();
     setupCategoryManagement();
     highlightToday();
-    setupDayCardClicks();
+    setupDayCardButtons();
     checkFruitVeggieStatus();
     setupExport();
+    setupClearAll();
 });
 
 // Highlight today's day
@@ -48,6 +49,7 @@ function handleDragStart(e) {
     const foodName = foodItem.querySelector('span').textContent;
     e.dataTransfer.setData('text/plain', foodName);
     e.dataTransfer.setData('category', foodItem.dataset.category);
+    e.dataTransfer.setData('isFromDropped', 'false');
 }
 
 function handleDragEnd(e) {
@@ -55,39 +57,78 @@ function handleDragEnd(e) {
     if (foodItem) {
         foodItem.classList.remove('dragging');
     }
+    
+    const droppedFood = e.target.closest('.dropped-food');
+    if (droppedFood) {
+        droppedFood.classList.remove('dragging');
+    }
 }
 
 function handleDragOver(e) {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
+    e.stopPropagation();
+    
+    // Check if it's from a dropped item or category
+    const isFromDropped = e.dataTransfer.effectAllowed === 'move';
+    e.dataTransfer.dropEffect = isFromDropped ? 'move' : 'copy';
+    
     e.currentTarget.classList.add('drag-over');
+    return false;
 }
 
 function handleDragLeave(e) {
+    if (e.currentTarget.contains(e.relatedTarget)) {
+        return;
+    }
     e.currentTarget.classList.remove('drag-over');
 }
 
 function handleDrop(e) {
     e.preventDefault();
+    e.stopPropagation();
     e.currentTarget.classList.remove('drag-over');
     
     const foodName = e.dataTransfer.getData('text/plain');
     const category = e.dataTransfer.getData('category');
+    const isFromDropped = e.dataTransfer.getData('isFromDropped');
+    
+    if (!foodName || !category) {
+        console.error('Missing food data');
+        return;
+    }
+    
     const dropZone = e.currentTarget;
     const mealSection = dropZone.closest('.meal-section');
     const dayCard = dropZone.closest('.day-card');
+    
+    if (!dayCard || !mealSection) {
+        console.error('Could not find day card or meal section');
+        return;
+    }
+    
     const day = dayCard.dataset.day;
     const meal = mealSection.dataset.meal;
+    
+    // If dragging from a dropped food item, remove the original
+    if (isFromDropped === 'true') {
+        const draggedElement = document.querySelector('.dropped-food.dragging');
+        if (draggedElement) {
+            draggedElement.remove();
+        }
+    }
     
     addFoodToMeal(day, meal, foodName, category, dropZone);
     saveMealPlan();
     checkFruitVeggieStatus();
+    
+    return false;
 }
 
 function addFoodToMeal(day, meal, foodName, category, dropZone) {
     const foodElement = document.createElement('div');
     foodElement.className = 'dropped-food';
     foodElement.dataset.category = category;
+    foodElement.draggable = true;
     
     // Get custom category color if it exists
     const categoryElement = document.querySelector(`.category[data-category="${category}"]`);
@@ -101,6 +142,24 @@ function addFoodToMeal(day, meal, foodName, category, dropZone) {
         <span>${foodName}</span>
         <button class="remove-btn">×</button>
     `;
+    
+    // Add drag event listeners for moving between meals/days
+    foodElement.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('remove-btn')) {
+            e.preventDefault();
+            return;
+        }
+        e.stopPropagation();
+        foodElement.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', foodName);
+        e.dataTransfer.setData('category', category);
+        e.dataTransfer.setData('isFromDropped', 'true');
+    });
+    
+    foodElement.addEventListener('dragend', (e) => {
+        foodElement.classList.remove('dragging');
+    });
     
     foodElement.querySelector('.remove-btn').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -298,18 +357,54 @@ function checkFruitVeggieStatus() {
     });
 }
 
-// Setup day card clicks to navigate to daily page
-function setupDayCardClicks() {
-    const dayCards = document.querySelectorAll('.day-card');
-    
-    dayCards.forEach(card => {
-        card.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('remove-btn')) {
-                const day = card.dataset.day;
-                window.location.href = `daily.html?day=${day}`;
-            }
+// Setup day card buttons
+function setupDayCardButtons() {
+    // Setup "Bring to Top" buttons
+    const bringToTopBtns = document.querySelectorAll('.bring-to-top-btn');
+    bringToTopBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const dayCard = btn.closest('.day-card');
+            const calendar = document.querySelector('.weekly-calendar');
+            calendar.insertBefore(dayCard, calendar.firstChild);
+            dayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
+    
+    // Setup "View Details" buttons
+    const viewDetailBtns = document.querySelectorAll('.view-detail-btn');
+    viewDetailBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const day = btn.dataset.day;
+            window.location.href = `daily.html?day=${day}`;
+        });
+    });
+}
+
+// Setup clear all functionality
+function setupClearAll() {
+    const clearBtn = document.getElementById('clearAllBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all meal plans? This cannot be undone.')) {
+                // Clear all drop zones
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.innerHTML = '';
+                });
+                
+                // Clear storage
+                mealPlan = {};
+                localStorage.removeItem('mealPlan');
+                localStorage.removeItem('foodDetails');
+                
+                // Update UI
+                checkFruitVeggieStatus();
+                
+                alert('All meal plans have been cleared.');
+            }
+        });
+    }
 }
 
 // Save meal plan to localStorage
